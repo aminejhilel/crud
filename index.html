@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+<body>
+    <main class="bg-blue-950 min-h-screen text-white">
+        <h1 class="text-6xl font-bold text-center pt-10 pb-2 uppercase">crud</h1>
+        <h2 class="text-3xl text-center mb-25">cakes list is <span id="count" class="text-green-400 font-bold">0</span></h2>
+    
+        <div class="text-center mb-5">
+            <input class="border-2 rounded-md p-1" type="text" placeholder="enter url" id="enterImg">
+            <input class="border-2 rounded-md p-1" type="text" placeholder="enter title" id="enterTitle">
+        </div>
+    
+        <div class="text-center flex gap-2 justify-center">
+            <button class="pl-6 pr-6 pb-2 pt-2 bg-green-600 rounded-xl cursor-pointer" id="create">create</button>
+            <button class="pl-6 pr-6 pb-2 pt-2 bg-red-600 rounded-xl cursor-pointer" id="deleteAll">delete All</button>
+        </div> 
+        <table class="border-2 text-center w-3xl m-auto mt-15">
+            <thead>
+                <tr class="bg-blue-800 border-2">
+                    <th class="p-1">id</th>
+                    <th>image</th>
+                    <th>title</th>
+                    <th>favorite</th>
+                    <th>delete</th>
+                </tr>
+            </thead>
+            <tbody class="border-2" id="tbody">
+                
+            </tbody>
+        </table>
+
+        <footer>
+            <p>
+                <small class="lowercase flex justify-center items-center p-10"><i class="fa-solid fa-copyright"> tous droit reserved</i></small>
+            </p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
