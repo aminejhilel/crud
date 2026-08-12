@@ -1,50 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cake CRUD</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --page-bg: #0f172a;
+            --text-main: #f8fafc;
+            --card-bg: rgba(15, 23, 42, 0.9);
+            --panel-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(148, 163, 184, 0.2);
+            --muted: #94a3b8;
+            --muted-strong: #cbd5e1;
+            --shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.75);
+        }
 
+        body.light {
+            --page-bg: #f8fafc;
+            --text-main: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --panel-bg: rgba(241, 245, 249, 0.95);
+            --card-border: rgba(148, 163, 184, 0.5);
+            --muted: #475569;
+            --muted-strong: #334155;
+            --shadow: 0 25px 50px -12px rgba(148, 163, 184, 0.35);
+        }
+
+        body {
+            background: var(--page-bg);
+            color: var(--text-main);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .theme-card {
+            background: var(--card-bg);
+            border-color: var(--card-border);
+        }
+
+        .theme-panel {
+            background: var(--panel-bg);
+        }
+
+        .theme-muted {
+            color: var(--muted) !important;
+        }
+
+        .theme-muted-strong {
+            color: var(--muted-strong) !important;
+        }
+
+        .theme-shadow {
+            box-shadow: var(--shadow);
+        }
+    </style>
 
 </head>
-<body>
-    <main class="bg-blue-950 min-h-screen text-white">
-        <h1 class="text-6xl font-bold text-center pt-10 pb-2 uppercase">crud</h1>
-        <h2 class="text-3xl text-center mb-25">cakes list is <span id="count" class="text-green-400 font-bold">0</span></h2>
-    
-        <div class="text-center mb-5">
-            <input class="border-2 rounded-md p-1" type="text" placeholder="enter url" id="enterImg">
-            <input class="border-2 rounded-md p-1" type="text" placeholder="enter title" id="enterTitle">
-        </div>
-    
-        <div class="text-center flex gap-2 justify-center">
-            <button class="pl-6 pr-6 pb-2 pt-2 bg-green-600 rounded-xl cursor-pointer" id="create">create</button>
-            <button class="pl-6 pr-6 pb-2 pt-2 bg-red-600 rounded-xl cursor-pointer" id="deleteAll">delete All</button>
-        </div> 
-        <table class="border-2 text-center w-3xl m-auto mt-15">
-            <thead>
-                <tr class="bg-blue-800 border-2">
-                    <th class="p-1">id</th>
-                    <th>image</th>
-                    <th>title</th>
-                    <th>favorite</th>
-                    <th>delete</th>
-                </tr>
-            </thead>
-            <tbody class="border-2" id="tbody">
-                
-            </tbody>
-        </table>
 
-        <footer>
-            <p>
-                <small class="lowercase flex justify-center items-center p-10"><i class="fa-solid fa-copyright"> tous droit reserved</i></small>
-            </p>
-        </footer>
+<body>
+    <main class="min-h-screen bg-slate-950 text-slate-100">
+        <div class="relative overflow-hidden">
+            <div
+                class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.2),transparent_25%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.18),transparent_25%)]">
+            </div>
+            <div class="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+                <header class="mb-10 text-center relative">
+                    <button id="themeToggle"
+                        class="absolute right-0 top-0 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/85 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-slate-800 sm:relative sm:right-auto sm:top-auto sm:ml-auto sm:mb-4 sm:inline-flex">
+                        <i class="fa-solid fa-sun"></i>
+                        <span>Light mode</span>
+                    </button>
+                    <p class="text-sm uppercase tracking-[0.4em] text-emerald-300">Tableau de bord</p>
+                    <h1 class="mt-4 text-5xl font-extrabold tracking-tight sm:text-6xl">Gestion des gâteaux</h1>
+                    <p class="mx-auto mt-4 max-w-2xl text-base theme-muted sm:text-lg">Ajoutez, modifiez, supprimez
+                        et marquez vos gâteaux favoris avec un design moderne et facile à utiliser.</p>
+                </header>
+
+                <section class="grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+                    <div
+                        class="rounded-[2rem] border border-slate-700/70 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur-xl theme-card theme-shadow">
+                        <div class="flex flex-col gap-6">
+                            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <h2 class="text-2xl font-semibold">Ajouter un cake</h2>
+                                    <p class="text-sm theme-muted">Entrez l'image et le titre pour créer un nouvel
+                                        item.</p>
+                                </div>
+                                <div
+                                    class="rounded-full bg-emerald-500/10 px-4 py-3 text-emerald-300 ring-1 ring-emerald-500/20">
+                                    <p class="text-xs uppercase tracking-[0.2em]">Total</p>
+                                    <div class="text-3xl font-bold" id="count">0</div>
+                                </div>
+                            </div>
+
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <input
+                                    class="rounded-2xl border border-slate-700 bg-slate-950/90 p-4 text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20"
+                                    type="text" placeholder="URL de l'image" id="enterImg">
+                                <input
+                                    class="rounded-2xl border border-slate-700 bg-slate-950/90 p-4 text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20"
+                                    type="text" placeholder="Titre du cake" id="enterTitle">
+                            </div>
+
+                            <div class="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                                <button
+                                    class="rounded-2xl bg-emerald-500 px-6 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-400"
+                                    id="create">Create</button>
+                                <button
+                                    class="rounded-2xl bg-rose-500 px-6 py-3 text-base font-semibold text-slate-950 transition hover:bg-rose-400"
+                                    id="deleteAll">Delete All</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="rounded-[2rem] border border-slate-700/70 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur-xl theme-card theme-shadow">
+                        <h3 class="text-2xl font-semibold">Aperçu rapide</h3>
+                        <p class="mt-4 theme-muted">Les gâteaux sont conservés dans le stockage local du navigateur.
+                            Ils restent disponibles même après le rechargement de la page.</p>
+                        <div
+                            class="mt-6 rounded-3xl border border-slate-700/70 bg-slate-950/90 p-5 theme-panel text-slate-300">
+                            <p class="text-sm uppercase tracking-[0.2em] theme-muted">Astuce</p>
+                            <p class="mt-3 text-base leading-7 theme-muted-strong">Cliquez sur le cœur pour marquer un
+                                gâteau favori. Vous
+                                pouvez modifier ou supprimer chaque élément avec les boutons.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="mt-10 overflow-hidden rounded-[2rem] border border-slate-700/70 bg-slate-900/80 shadow-2xl shadow-slate-950/40 theme-card theme-shadow">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left">
+                            <caption class="sr-only">Liste des gâteaux</caption>
+                            <thead class="bg-slate-950/90 text-slate-300">
+                                <tr>
+                                    <th class="px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em]">#</th>
+                                    <th class="px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em]">Image</th>
+                                    <th class="px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em]">Titre</th>
+                                    <th class="px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em]">Favori</th>
+                                    <th class="px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em]">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody" class="divide-y divide-slate-800 bg-slate-900/80 text-slate-100"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <footer class="mt-10 text-center text-slate-500">
+                    <small>© 2026 Tous droits réservés</small>
+                </footer>
+            </div>
+        </div>
     </main>
 
     <script src="script.js"></script>
 </body>
+
 </html>
